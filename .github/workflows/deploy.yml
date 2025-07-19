@@ -10,14 +10,14 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to deploy"
+        description: 'Environment to deploy'
         required: true
         type: choice
         options:
           - main
           - staging
       confirm_deployment:
-        description: "Confirm the deployment"
+        description: 'Confirm the deployment'
         required: true
         type: boolean
         default: false
@@ -31,7 +31,7 @@ jobs:
       deploy_version: ${{ steps.set-env.outputs.deploy_version }}
     steps:
       - name: Validate deployment confirmation
-        if: github.event_name == "workflow_dispatch"
+        if: github.event_name == 'workflow_dispatch'
         run: |
           if [[ "${{ github.event.inputs.confirm_deployment }}" != "true" ]]; then
             echo "::error::Deployment confirmation not received. Please confirm the deployment before proceeding."
