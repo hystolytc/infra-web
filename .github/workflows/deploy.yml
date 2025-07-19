@@ -60,7 +60,7 @@ jobs:
     environment: ${{ needs.setup-env.outputs.deploy_env }}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
       ECR_REPOSITORY_URL: ${{ vars.ECR_REPOSITORY_URL }}
       NEXT_PUBLIC_AUTHOR_NAME: ${{ vars.NEXT_PUBLIC_AUTHOR_NAME }}
