@@ -45,7 +45,7 @@ jobs:
           DEPLOY_VERSION="staging"
 
           if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/release/* ]]; then
-            DEPLOY_VERSION="${{ github.ref#refs/tags/release- }}"
+            DEPLOY_VERSION=$(echo ${{ github.ref }} | cut -d'/' -f 4 | cut -d'-' -f 2)
           fi
 
           echo "deploy_env=$DEPLOY_ENV" >> $GITHUB_OUTPUT
