@@ -108,8 +108,31 @@ jobs:
           build-args: |
             NEXT_PUBLIC_AUTHOR_NAME=${{ env.NEXT_PUBLIC_AUTHOR_NAME }}
             NEXT_PUBLIC_ENV=${{ env.NEXT_PUBLIC_ENV }}
+          outputs: |
+            type=image;name=${{ env.ECR_REPOSITORY_URL }}:${{ github.sha }},push=true
       
       - name: Set image outputs
         id: set-image
         run: |
           echo "image=${{ env.ECR_REPOSITORY_URL }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.build-image.outputs.image }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+      
+      - name: Check for critical vulnerabilities
+        run: |
+          if grep -q '"level":"error"' trivy-results.sarif; then
+            echo "::error::Critical vulnerabilities found in the image"
+            exit 1
+          fi
